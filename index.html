@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Button Clicker</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: white;
+        }
+
+        button, button1 {
+            user-select: none;
+        }
+
+        .section1 {
+            background-color: #060606;
+            text-align: center;
+            font-family: 'Courier New', Courier, monospace, sans-serif;
+            color: #ffffff;
+            margin: 0 auto; /* centers it */
+            padding-top: 20px; /* keeps spacing INSIDE the box */
+        }
+
+        button {
+            background-color: black;
+            color: aquamarine;
+            padding: 10px 20px;
+            border: 2px solid aquamarine;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .section2 {
+            background-color: deepskyblue;
+            color: black;
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            padding: 20px;
+            text-align: center;
+            width: 950px;
+            margin: 0px auto; /* spacing between sections */
+        }
+
+        button1 {
+            background-color: white;
+            color: black;
+            padding: 10px 20px;
+            border: 2px solid black;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .sidebar-right {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 220px;
+            height: 100%;
+            background-color: grey;
+        }
+         .sidebar-left {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 220px;
+            height: 100%;
+            background-color: grey;
+        }
+        .shop-menu {
+            font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 50px;
+        }
+        .reset-button {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: red;
+            color: black;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+    </style>
+
+    <script>
+let clicks = 0;
+let autoclickerOn = false;
+
+// Load saved clicks when the page opens
+if (localStorage.getItem("clicks")) {
+    clicks = parseInt(localStorage.getItem("clicks"));
+    document.getElementById("click-count").innerText = "Clicks: " + clicks;
+}
+
+// Main click function
+function clickButton() {
+    clicks += 1;
+    document.getElementById("click-count").innerText = "Clicks: " + clicks;
+    localStorage.setItem("clicks", clicks);
+}
+
+// Reset clicks
+function resetClicks() {
+    if (confirm("Are you sure you want to reset your clicks? This cannot be undone.")) {
+        clicks = 0;
+        document.getElementById("click-count").innerText = "Clicks: 0";
+        localStorage.setItem("clicks", 0);
+    }
+}
+
+// Toggle auto-clicker
+function toggleAutoClicker() {
+    autoclickerOn = !autoclickerOn;
+    console.log("AutoClicker:", autoclickerOn);
+}
+
+// Auto-click loop (runs forever)
+setInterval(() => {
+    if (autoclickerOn) {
+        clickButton();
+    }
+}, 1000);
+
+
+</script>
+
+</head>
+
+<body>
+    <div class="section1">
+        <h1>Auto Clicker</h1>
+        This is the Auto Clicker section, upgrade on the shop sidebar.
+        <br><br>
+        <button class="toggle-autoclicker" onclick="toggleAutoClicker()">
+            Toggle Auto Clicker
+        </button>
+        <br><br>
+        CPS: 1
+        <br><br>
+    </div>
+
+    <div class="section2">
+        <br><br>
+        <br><br>
+        <br><br>
+        <h2>The Button...</h2>
+        <h3 id="click-count">Clicks: 0
+            <br>
+            Note: Clicks are saved to your device, to load click the button.
+        </h3>
+        <br>
+        <button1 onclick="clickButton()">Click Meh</button1>
+        <br><br>
+        <br><br>
+        <br><br>
+    </div>
+
+    <div class="sidebar-right">
+        <header class="shop-menu">Shop</header>
+    </div>
+    <div class="sidebar-left">
+        <button onclick="resetClicks()" class="reset-button">Reset Clicks</button>
+    </div>
+</body>
+</html>
