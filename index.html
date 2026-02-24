@@ -19,8 +19,8 @@
             text-align: center;
             font-family: 'Courier New', Courier, monospace, sans-serif;
             color: #ffffff;
-            margin: 0 auto; /* centers it */
-            padding-top: 20px; /* keeps spacing INSIDE the box */
+            margin: 0 auto;
+            padding-top: 20px;
         }
 
         button {
@@ -36,21 +36,21 @@
         .section2 {
             background-color: deepskyblue;
             color: black;
-            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            font-family: 'Lucida Sans', sans-serif;
             padding: 20px;
             text-align: center;
             width: 950px;
-            margin: 0px auto; /* spacing between sections */
+            margin: 0px auto;
         }
 
         button1 {
-            background-color: white;
-            color: black;
-            padding: 10px 20px;
-            border: 2px solid black;
+            background-color: black;
+            color: aquamarine;
+            padding: 15px 25px;
+            border: 2px solid aquamarine;
             border-radius: 10px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 20px;
         }
 
         .sidebar-right {
@@ -60,8 +60,10 @@
             width: 220px;
             height: 100%;
             background-color: grey;
+            overflow-y: auto;
         }
-         .sidebar-left {
+
+        .sidebar-left {
             position: fixed;
             top: 0;
             left: 0;
@@ -69,13 +71,34 @@
             height: 100%;
             background-color: grey;
         }
+
         .shop-menu {
-            font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            font-family: Impact, sans-serif;
             color: white;
             text-align: center;
             padding: 20px;
             font-size: 50px;
         }
+
+        .shop-buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .upgrade-button {
+            width: 150px;
+            margin: 10px 0;
+            text-align: center;
+            padding: 10px;
+            border: 2px solid black;
+            background-color: black;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
         .reset-button {
             position: absolute;
             top: 20px;
@@ -90,85 +113,198 @@
             font-size: 16px;
         }
     </style>
-
-    <script>
-let clicks = 0;
-let autoclickerOn = false;
-
-// Load saved clicks when the page opens
-if (localStorage.getItem("clicks")) {
-    clicks = parseInt(localStorage.getItem("clicks"));
-    document.getElementById("click-count").innerText = "Clicks: " + clicks;
-}
-
-// Main click function
-function clickButton() {
-    clicks += 1;
-    document.getElementById("click-count").innerText = "Clicks: " + clicks;
-    localStorage.setItem("clicks", clicks);
-}
-
-// Reset clicks
-function resetClicks() {
-    if (confirm("Are you sure you want to reset your clicks? This cannot be undone.")) {
-        clicks = 0;
-        document.getElementById("click-count").innerText = "Clicks: 0";
-        localStorage.setItem("clicks", 0);
-    }
-}
-
-// Toggle auto-clicker
-function toggleAutoClicker() {
-    autoclickerOn = !autoclickerOn;
-    console.log("AutoClicker:", autoclickerOn);
-}
-
-// Auto-click loop (runs forever)
-setInterval(() => {
-    if (autoclickerOn) {
-        clickButton();
-    }
-}, 1000);
-
-
-</script>
-
 </head>
 
 <body>
     <div class="section1">
         <h1>Auto Clicker</h1>
-        This is the Auto Clicker section, upgrade on the shop sidebar.
+        <button onclick="toggleAutoClicker()" id="toggle-btn">Auto Clicker: OFF</button>
         <br><br>
-        <button class="toggle-autoclicker" onclick="toggleAutoClicker()">
-            Toggle Auto Clicker
-        </button>
-        <br><br>
-        CPS: 1
+        CPS: <span id="cps-display">0</span>
         <br><br>
     </div>
 
     <div class="section2">
-        <br><br>
-        <br><br>
-        <br><br>
         <h2>The Button...</h2>
-        <h3 id="click-count">Clicks: 0
-            <br>
-            Note: Clicks are saved to your device, to load click the button.
-        </h3>
-        <br>
-        <button1 onclick="clickButton()">Click Meh</button1>
-        <br><br>
-        <br><br>
-        <br><br>
+        <h3 id="click-count">Clicks: 0</h3>
+
+        <button1 onclick="clickButton()" id="click-btn">
+            Click (+<span id="cp-display">1</span>)
+        </button1>
+
+        <br><br><br>
     </div>
 
     <div class="sidebar-right">
         <header class="shop-menu">Shop</header>
+
+        <div class="shop-buttons">
+
+            <!-- CPS Upgrades -->
+            <button class="upgrade-button" onclick="upgradeAutoClicker1()">
+                +1 CPS<br>
+                <span id="price1">Cost: 100</span>
+            </button>
+
+            <button class="upgrade-button" onclick="upgradeAutoClicker2()">
+                +5 CPS<br>
+                <span id="price2">Cost: 500</span>
+            </button>
+
+            <!-- Click Power Upgrades -->
+            <button class="upgrade-button" onclick="upgradeClickPower1()">
+                +1 Click Power<br>
+                <span id="clickpower1">Cost: 20000</span>
+            </button>
+
+            <button class="upgrade-button" onclick="upgradeClickPower5()">
+                +5 Click Power<br>
+                <span id="clickpower5">Cost: 100000</span>
+            </button>
+
+        </div>
     </div>
+
     <div class="sidebar-left">
         <button onclick="resetClicks()" class="reset-button">Reset Clicks</button>
     </div>
+
+<script>
+    let clicks = 0;
+    let cps = 0;
+    let autoClickerPrice = 100;
+    let autoclickerOn = false;
+
+    let clickPower = 1;
+    let clickPowerPrice = 20000;
+
+    function saveGame() {
+        localStorage.setItem("clicks", clicks);
+        localStorage.setItem("cps", cps);
+        localStorage.setItem("autoClickerPrice", autoClickerPrice);
+        localStorage.setItem("autoclickerOn", autoclickerOn ? "true" : "false");
+
+        localStorage.setItem("clickPower", clickPower);
+        localStorage.setItem("clickPowerPrice", clickPowerPrice);
+    }
+
+    function loadGame() {
+        if (localStorage.getItem("clicks")) clicks = parseInt(localStorage.getItem("clicks"));
+        if (localStorage.getItem("cps")) cps = parseInt(localStorage.getItem("cps"));
+        if (localStorage.getItem("autoClickerPrice")) autoClickerPrice = parseInt(localStorage.getItem("autoClickerPrice"));
+        if (localStorage.getItem("autoclickerOn")) autoclickerOn = localStorage.getItem("autoclickerOn") === "true";
+
+        if (localStorage.getItem("clickPower")) clickPower = parseInt(localStorage.getItem("clickPower"));
+        if (localStorage.getItem("clickPowerPrice")) clickPowerPrice = parseInt(localStorage.getItem("clickPowerPrice"));
+
+        document.getElementById("click-count").innerText = "Clicks: " + clicks;
+        updatePrices();
+        updateUI();
+    }
+
+    function updatePrices() {
+        document.getElementById("price1").innerText = "Cost: " + autoClickerPrice;
+        document.getElementById("price2").innerText = "Cost: " + (autoClickerPrice * 5);
+
+        document.getElementById("clickpower1").innerText = "Cost: " + clickPowerPrice;
+        document.getElementById("clickpower5").innerText = "Cost: " + (clickPowerPrice * 5);
+
+        document.getElementById("cps-display").innerText = cps;
+        document.getElementById("cp-display").innerText = clickPower;
+    }
+
+    function updateUI() {
+        document.getElementById("toggle-btn").innerText =
+            autoclickerOn ? "Auto Clicker: ON" : "Auto Clicker: OFF";
+    }
+
+    function clickButton() {
+        clicks += clickPower;
+        document.getElementById("click-count").innerText = "Clicks: " + clicks;
+        saveGame();
+    }
+
+    function resetClicks() {
+        if (confirm("Are you sure?")) {
+            clicks = 0;
+            cps = 0;
+            autoClickerPrice = 100;
+            autoclickerOn = false;
+
+            clickPower = 1;
+            clickPowerPrice = 20000;
+
+            saveGame();
+            updatePrices();
+            updateUI();
+            document.getElementById("click-count").innerText = "Clicks: 0";
+        }
+    }
+
+    function toggleAutoClicker() {
+        autoclickerOn = !autoclickerOn;
+        updateUI();
+        saveGame();
+    }
+
+    function upgradeAutoClicker1() {
+        if (clicks >= autoClickerPrice) {
+            clicks -= autoClickerPrice;
+            cps += 1;
+            autoClickerPrice = Math.ceil(autoClickerPrice * 1.10);
+            document.getElementById("click-count").innerText = "Clicks: " + clicks;
+            updatePrices();
+            saveGame();
+        } else alert("Not enough clicks!");
+    }
+
+    function upgradeAutoClicker2() {
+        let cost = autoClickerPrice * 5;
+        if (clicks >= cost) {
+            clicks -= cost;
+            cps += 5;
+            autoClickerPrice = Math.ceil(autoClickerPrice * 1.50);
+            document.getElementById("click-count").innerText = "Clicks: " + clicks;
+            updatePrices();
+            saveGame();
+        } else alert("Not enough clicks!");
+    }
+
+    function upgradeClickPower1() {
+        if (clicks >= clickPowerPrice) {
+            clicks -= clickPowerPrice;
+            clickPower += 1;
+            clickPowerPrice = Math.ceil(clickPowerPrice * 1.50);
+            document.getElementById("click-count").innerText = "Clicks: " + clicks;
+            updatePrices();
+            saveGame();
+        } else alert("Not enough clicks!");
+    }
+
+    function upgradeClickPower5() {
+        let cost = clickPowerPrice * 5;
+        if (clicks >= cost) {
+            clicks -= cost;
+            clickPower += 5;
+            clickPowerPrice = Math.ceil(clickPowerPrice * 2.50);
+            document.getElementById("click-count").innerText = "Clicks: " + clicks;
+            updatePrices();
+            saveGame();
+        } else alert("Not enough clicks!");
+    }
+
+    setInterval(() => {
+    if (autoclickerOn) {
+        clicks += cps + 1;
+    }
+
+    document.getElementById("click-count").innerText = "Clicks: " + clicks;
+    saveGame();
+}, 1000);
+
+
+    loadGame();
+</script>
+
 </body>
 </html>
