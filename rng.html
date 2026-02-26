@@ -46,6 +46,22 @@
             font-size: 20px;
             font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
         }
+        .left-sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 150px;
+            padding: 20px;
+            text-align: center;
+        }
+        .resetbutton {
+            background-color: red;
+            display: block;
+            margin: 0 auto;
+            /* keep button at top of sidebar */
+            padding: 10px 20px;
+            font-size: 15px;
+        }
     </style>
 
 
@@ -60,6 +76,10 @@
         <br><br><br>
         <p id="roll" class="rolled"> Just rolled: 0</p>
         <p id="score" class="scoreboard">Score: 0</p>
+    </div>
+
+    <div class="left-sidebar">
+        <button onclick="resetClicks()" class="resetbutton">Reset Game</button>
     </div>
    
 
@@ -99,6 +119,14 @@ function rollScore() {
     console.log("You rolled:", roll);
     console.log("New score:", score);
 }
+ function resetClicks() {
+        if (confirm("Are you sure?")) {
+            score = 0;
+
+            saveGame();
+            document.getElementById("score").innerText = "Score: 0";
+        }
+    }
 
 // CALL LOAD WHEN PAGE OPENS
 loadGame();
