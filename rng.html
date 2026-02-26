@@ -18,17 +18,33 @@
             width: 300px;
             margin: 0 auto;
         }
-        .rngtitle:hover {
-            color: transparent;
-            background: linear-gradient(90deg, magenta, cyan);
-            -webkit-background-clip: text;
-            background-clip: text;
-        }
+        
         .rngbutton {
             background-color: black;
             color: aquamarine;
-            padding: 15px 25px;
-            border: 2px solid aquamarine;
+            border: 5px solid cyan;
+            padding: 15px 30px;
+            font-size: 30px;
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            color: transparent;
+            background: linear-gradient(90deg, cyan, magenta);
+            -webkit-background-clip: text;
+            background-clip: text;
+            font-style: bold;
+
+        }
+        .roll-section {
+            text-align: center;
+        }
+        .scoreboard{
+            color: magenta;
+            font-size: 20px;
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        }
+        .rolled{
+            color: cyan;
+            font-size: 20px;
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
         }
     </style>
 
@@ -39,13 +55,33 @@
     <title>RNG Game</title>
     <header class="rngtitle">RNG Game</header>
     <br><br><br>
-    <button onclick="rollScore()" class="rngbutton">Roll for points</button>
+    <div class="roll-section">
+        <button onclick="rollScore()" class="rngbutton">Roll for points</button>
+        <br><br><br>
+        <p id="roll" class="rolled"> Just rolled: 0</p>
+        <p id="score" class="scoreboard">Score: 0</p>
+    </div>
+   
 
 
 
 
     <script>
-        let score = 0;
+let score = 0;
+
+// LOAD SCORE ON START
+function loadGame() {
+    let saved = localStorage.getItem("score");
+    if (saved !== null) {
+        score = parseInt(saved);
+        document.getElementById("score").innerText = "Score: " + score;
+    }
+}
+
+// SAVE SCORE
+function saveGame() {
+    localStorage.setItem("score", score);
+}
 
 function rollScore() {
     let num1 = 1;
@@ -55,9 +91,17 @@ function rollScore() {
 
     score += roll;
 
+    saveGame(); // ← SAVE HERE
+
+    document.getElementById("score").innerText = "Score: " + score;
+    document.getElementById("roll").innerText = "Just rolled: " + roll;
+
     console.log("You rolled:", roll);
     console.log("New score:", score);
 }
 
-    </script>
+// CALL LOAD WHEN PAGE OPENS
+loadGame();
+</script>
+
 </html>
